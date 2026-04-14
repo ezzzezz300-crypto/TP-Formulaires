@@ -70,16 +70,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Candidature</title>
+
+    <style>
+        .erreurs {
+            color: red;
+            background: #ffe5e5;
+            padding: 10px;
+            border: 1px solid red;
+            width: 50%;
+        }
+    </style>
 </head>
 <body>
 
     <h1>Formulaire de candidature</h1>
 
-    <!-- 🔴 AFFICHAGE DES ERREURS -->
-    <?php if (!empty($erreurs)) : ?>
-        <ul style="color:red;">
-            <?php foreach ($erreurs as $erreur) : ?>
-                <li><?= $erreur ?></li>
+    <!-- 🔴 ÉTAPE 5.a : AFFICHAGE DES ERREURS -->
+    <?php if (!empty($erreurs)): ?>
+        <ul class="erreurs">
+            <?php foreach ($erreurs as $e): ?>
+                <li><?php echo $e; ?></li>
             <?php endforeach; ?>
         </ul>
     <?php endif; ?>
@@ -115,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             J'accepte le règlement
         </label><br><br>
 
-        <button type="submit">Envoyer</button>
+        <button type="submit">Envoyer ma candidature</button>
 
     </form>
 
