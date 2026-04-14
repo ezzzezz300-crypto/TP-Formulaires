@@ -6,19 +6,62 @@ $age        = '';
 $filiere    = '';
 $motivation = '';
 $erreurs    = [];
+$reglement  = false;
 
 // ✅ Étape 3.a : détection du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // ✅ Récupération des données (liaison avec le formulaire étape 2)
+    // ✅ Récupération des données
     $prenom     = $_POST['prenom'] ?? '';
     $nom        = $_POST['nom'] ?? '';
     $email      = $_POST['email'] ?? '';
     $age        = $_POST['age'] ?? '';
     $filiere    = $_POST['filiere'] ?? '';
     $motivation = $_POST['motivation'] ?? '';
+    $reglement  = isset($_POST['reglement']);
 
-    // (plus tard ici : validation + erreurs)
+    // =========================
+    // ✅ ÉTAPE 4 : VALIDATION
+    // =========================
+
+    // Prénom
+    if (empty($prenom)) {
+        $erreurs[] = "Le prénom est obligatoire.";
+    }
+
+    // Nom
+    if (empty($nom)) {
+        $erreurs[] = "Le nom est obligatoire.";
+    }
+
+    // Email
+    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $erreurs[] = "L'adresse email est invalide.";
+    }
+
+    // Âge
+    if (empty($age) || !filter_var($age, FILTER_VALIDATE_INT)) {
+        $erreurs[] = "L'âge doit être un nombre entre 16 et 30.";
+    } else {
+        if ($age < 16 || $age > 30) {
+            $erreurs[] = "L'âge doit être un nombre entre 16 et 30.";
+        }
+    }
+
+    // Filière
+    if (empty($filiere)) {
+        $erreurs[] = "Veuillez choisir une filière.";
+    }
+
+    // Motivation
+    if (strlen($motivation) < 30) {
+        $erreurs[] = "La motivation doit contenir au moins 30 caractères.";
+    }
+
+    // Règlement
+    if (!$reglement) {
+        $erreurs[] = "Vous devez accepter le règlement.";
+    }
 }
 ?>
 
@@ -32,26 +75,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <h1>Formulaire de candidature</h1>
 
+    <!-- 🔴 AFFICHAGE DES ERREURS -->
+    <?php if (!empty($erreurs)) : ?>
+        <ul style="color:red;">
+            <?php foreach ($erreurs as $erreur) : ?>
+                <li><?= $erreur ?></li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
     <form action="candidature.php" method="POST">
 
-        <!-- Prénom -->
         <label>Prénom :</label><br>
         <input type="text" name="prenom" value="<?= $prenom ?>"><br><br>
 
-        <!-- Nom -->
         <label>Nom :</label><br>
         <input type="text" name="nom" value="<?= $nom ?>"><br><br>
 
-        <!-- Email -->
-        <label>Adresse email :</label><br>
+        <label>Email :</label><br>
         <input type="email" name="email" value="<?= $email ?>"><br><br>
 
-        <!-- Âge -->
         <label>Âge :</label><br>
         <input type="number" name="age" value="<?= $age ?>"><br><br>
 
-        <!-- Filière -->
-        <label>Filière souhaitée :</label><br>
+        <label>Filière :</label><br>
         <select name="filiere">
             <option value="">-- Choisir --</option>
             <option value="Informatique" <?= $filiere == 'Informatique' ? 'selected' : '' ?>>Informatique</option>
@@ -60,18 +107,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <option value="Autre" <?= $filiere == 'Autre' ? 'selected' : '' ?>>Autre</option>
         </select><br><br>
 
-        <!-- Motivation -->
-        <label>Lettre de motivation :</label><br>
+        <label>Motivation :</label><br>
         <textarea name="motivation" rows="6"><?= $motivation ?></textarea><br><br>
 
-        <!-- Règlement -->
         <label>
-            <input type="checkbox" name="reglement" value="1">
-            J'ai lu et j'accepte le règlement du club.
+            <input type="checkbox" name="reglement" value="1" <?= $reglement ? 'checked' : '' ?>>
+            J'accepte le règlement
         </label><br><br>
 
-        <!-- Bouton -->
-        <button type="submit">Envoyer ma candidature</button>
+        <button type="submit">Envoyer</button>
 
     </form>
 
