@@ -24,22 +24,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // ✅ ÉTAPE 4 : VALIDATION
     // =========================
 
-    // Prénom
     if (empty($prenom)) {
         $erreurs[] = "Le prénom est obligatoire.";
     }
 
-    // Nom
     if (empty($nom)) {
         $erreurs[] = "Le nom est obligatoire.";
     }
 
-    // Email
     if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $erreurs[] = "L'adresse email est invalide.";
     }
 
-    // Âge
     if (empty($age) || !filter_var($age, FILTER_VALIDATE_INT)) {
         $erreurs[] = "L'âge doit être un nombre entre 16 et 30.";
     } else {
@@ -48,17 +44,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Filière
     if (empty($filiere)) {
         $erreurs[] = "Veuillez choisir une filière.";
     }
 
-    // Motivation
     if (strlen($motivation) < 30) {
         $erreurs[] = "La motivation doit contenir au moins 30 caractères.";
     }
 
-    // Règlement
     if (!$reglement) {
         $erreurs[] = "Vous devez accepter le règlement.";
     }
@@ -83,51 +76,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 
-    <h1>Formulaire de candidature</h1>
+<h1>Formulaire de candidature</h1>
 
-    <!-- 🔴 ÉTAPE 5.a : AFFICHAGE DES ERREURS -->
-    <?php if (!empty($erreurs)): ?>
-        <ul class="erreurs">
-            <?php foreach ($erreurs as $e): ?>
-                <li><?php echo $e; ?></li>
-            <?php endforeach; ?>
-        </ul>
-    <?php endif; ?>
+<!-- 🔴 ÉTAPE 5.a -->
+<?php if (!empty($erreurs)): ?>
+    <ul class="erreurs">
+        <?php foreach ($erreurs as $e): ?>
+            <li><?php echo $e; ?></li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
 
-    <form action="candidature.php" method="POST">
+<form action="candidature.php" method="POST">
 
-        <label>Prénom :</label><br>
-        <input type="text" name="prenom" value="<?= $prenom ?>"><br><br>
+    <!-- 6.a INPUTS -->
+    <label>Prénom :</label><br>
+    <input type="text" name="prenom" value="<?php echo $prenom; ?>"><br><br>
 
-        <label>Nom :</label><br>
-        <input type="text" name="nom" value="<?= $nom ?>"><br><br>
+    <label>Nom :</label><br>
+    <input type="text" name="nom" value="<?php echo $nom; ?>"><br><br>
 
-        <label>Email :</label><br>
-        <input type="email" name="email" value="<?= $email ?>"><br><br>
+    <label>Email :</label><br>
+    <input type="email" name="email" value="<?php echo $email; ?>"><br><br>
 
-        <label>Âge :</label><br>
-        <input type="number" name="age" value="<?= $age ?>"><br><br>
+    <label>Âge :</label><br>
+    <input type="number" name="age" value="<?php echo $age; ?>"><br><br>
 
-        <label>Filière :</label><br>
-        <select name="filiere">
-            <option value="">-- Choisir --</option>
-            <option value="Informatique" <?= $filiere == 'Informatique' ? 'selected' : '' ?>>Informatique</option>
-            <option value="Électronique" <?= $filiere == 'Électronique' ? 'selected' : '' ?>>Électronique</option>
-            <option value="Mécanique" <?= $filiere == 'Mécanique' ? 'selected' : '' ?>>Mécanique</option>
-            <option value="Autre" <?= $filiere == 'Autre' ? 'selected' : '' ?>>Autre</option>
-        </select><br><br>
+    <!-- 6.c SELECT -->
+    <label>Filière :</label><br>
+    <select name="filiere">
+        <option value="">-- Choisir --</option>
 
-        <label>Motivation :</label><br>
-        <textarea name="motivation" rows="6"><?= $motivation ?></textarea><br><br>
+        <option value="Informatique"
+            <?php echo ($filiere === 'Informatique') ? 'selected' : ''; ?>>
+            Informatique
+        </option>
 
-        <label>
-            <input type="checkbox" name="reglement" value="1" <?= $reglement ? 'checked' : '' ?>>
-            J'accepte le règlement
-        </label><br><br>
+        <option value="Électronique"
+            <?php echo ($filiere === 'Électronique') ? 'selected' : ''; ?>>
+            Électronique
+        </option>
 
-        <button type="submit">Envoyer ma candidature</button>
+        <option value="Mécanique"
+            <?php echo ($filiere === 'Mécanique') ? 'selected' : ''; ?>>
+            Mécanique
+        </option>
 
-    </form>
+        <option value="Autre"
+            <?php echo ($filiere === 'Autre') ? 'selected' : ''; ?>>
+            Autre
+        </option>
+    </select><br><br>
+
+    <!-- 6.b TEXTAREA -->
+    <label>Motivation :</label><br>
+    <textarea name="motivation" rows="6"><?php echo $motivation; ?></textarea><br><br>
+
+    <!-- 6.d CHECKBOX -->
+    <label>
+        <input type="checkbox" name="reglement" value="1"
+            <?php echo $reglement ? 'checked' : ''; ?>>
+        J'accepte le règlement
+    </label><br><br>
+
+    <button type="submit">Envoyer ma candidature</button>
+
+</form>
 
 </body>
 </html>
